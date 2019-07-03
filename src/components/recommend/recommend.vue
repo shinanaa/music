@@ -1,31 +1,45 @@
 <template>
-    <div class="recommend">
-      <scroll class="recommend-content">
-        <div>
-          <div class="slider-wrapper" ref="sliderWrapper">
-          </div>
-          <div class="recommend-list">
-            <h1 class="list-title">热门歌单推荐</h1>
-            <ul>
-            </ul>
-          </div>
+  <div class="recommend">
+    <scroll class="recommend-content">
+      <div>
+        <div class="slider-wrapper" ref="sliderWrapper">
+          <slider>
+            <div v-for="(item,index) in recommends" :key="index">
+              <a :href="item.linkUrl">
+                <img :src="item.picUrl" alt="">
+              </a>
+            </div>
+          </slider>
         </div>
-        <!--<div class="loading-container" v-show="!discList.length">
-          <loading></loading>
-        </div>-->
-      </scroll>
-    </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+          </ul>
+        </div>
+      </div>
+      <!--<div class="loading-container" v-show="!discList.length">
+        <loading></loading>
+      </div>-->
+    </scroll>
+  </div>
 </template>
 
 <script>
 import Scroll from '@/base/scroll/scroll'
 import {getRecommend} from '@/api/recommend'
 import {ERR_OK} from '@/api/config'
-// import Slider from ''
+import Slider from '@/base/slider/slider'
+
 export default {
   name: 'recommend',
+  data() {
+    return {
+      recommends: []
+    }
+  },
   components: {
-    Scroll
+    Scroll,
+    Slider
   },
   created() {
     this._getRecommend()
@@ -35,6 +49,7 @@ export default {
       getRecommend().then((res) => {
         if (res.code === ERR_OK) {
           console.log(res.data.slider)
+          this.recommends = res.data.slider
         }
       })
     }
