@@ -2,7 +2,7 @@
   <div class="recommend">
     <scroll class="recommend-content">
       <div>
-        <div class="slider-wrapper" ref="sliderWrapper">
+        <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
           <slider>
             <div v-for="(item,index) in recommends" :key="index">
               <a :href="item.linkUrl">
@@ -48,7 +48,6 @@ export default {
     _getRecommend() {
       getRecommend().then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res.data.slider)
           this.recommends = res.data.slider
         }
       })
