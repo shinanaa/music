@@ -31,7 +31,7 @@ export default {
     },
     interval: {
       type: Number,
-      default: 300
+      default: 1000
     }
   },
   componments: [
