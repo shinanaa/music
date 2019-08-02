@@ -1,5 +1,6 @@
 import Jsonp from 'common/js/jsonp'
 import {commonParams, options} from './config'
+import axios from 'axios'
 
 export function getRecommend() {
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
@@ -11,7 +12,7 @@ export function getRecommend() {
   return Jsonp(url, data, options)
 }
 export function getDiscList() {
-  const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+  const url = '/getDiscList'
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
     hostUin: 0,
@@ -20,7 +21,12 @@ export function getDiscList() {
     sortId: 5,
     needNewCode: 0,
     categoryId: 10000000,
-    rnd: Math.random()
+    rnd: Math.random(),
+    format: 'json'
   })
-  return Jsonp(url, data, options)
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
 }
