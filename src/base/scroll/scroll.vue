@@ -8,6 +8,7 @@
 import BScroll from 'better-scroll'
 export default {
   name: 'scroll',
+  // 父组件传入的可控制的值
   props: {
     probeType: {
       type: Number,
@@ -37,6 +38,7 @@ export default {
         click: this.click
       })
     },
+    // better-scroll方法代理
     enable() {
       this.scroll && this.scroll.enable()
     },

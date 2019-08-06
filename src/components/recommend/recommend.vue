@@ -1,12 +1,12 @@
 <template>
   <div class="recommend">
-    <scroll class="recommend-content">
+    <scroll ref="scroll" class="recommend-content" :data="discList">
       <div>
         <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
           <slider>
             <div v-for="(item,index) in recommends" :key="index">
               <a :href="item.linkUrl">
-                <img :src="item.picUrl" alt="">
+                <img @load="loadImage" :src="item.picUrl" alt="">
               </a>
             </div>
           </slider>
@@ -16,7 +16,7 @@
           <ul>
             <li v-for="(item, index) in discList" :key="index" class="item">
               <div class="icon">
-                <img width="60" height="60" :src="item.imgurl" alt="">
+                <img width="60" height="60" v-lazy="item.imgurl" alt="">
               </div>
               <div class="text">
                 <h2 class="name" v-html="item.creator.name"></h2>
@@ -26,14 +26,15 @@
           </ul>
         </div>
       </div>
-      <!--<div class="loading-container" v-show="!discList.length">
+      <div class="loading-container" v-show="!discList.length">
         <loading></loading>
-      </div>-->
+      </div>
     </scroll>
   </div>
 </template>
 
 <script>
+import Loading from '@/base/loading/loading'
 import Scroll from '@/base/scroll/scroll'
 import {getRecommend, getDiscList} from '@/api/recommend'
 import {ERR_OK} from '@/api/config'
@@ -49,7 +50,8 @@ export default {
   },
   components: {
     Scroll,
-    Slider
+    Slider,
+    Loading
   },
   created() {
     this._getRecommend()
@@ -69,6 +71,13 @@ export default {
           this.discList = res.data.list
         }
       })
+    },
+    // 当图片加载时，再调用scroll组件的refresh方法，避免其因初始化高度不足
+    loadImage() {
+      if (!this.checkLoad) {
+        this.$refs.scroll.refresh()
+        this.checkLoad = true
+      }
     }
   }
 }
