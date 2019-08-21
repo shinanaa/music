@@ -1,17 +1,39 @@
 <template>
-    <div></div>
+    <scroll class="listView" :data="data">
+      <ul>
+        <li v-for="(group, index) in data" :key="index" class="list-group">
+          <h2 class="list-group-title">{{group.title}}</h2>
+          <ul>
+            <li v-for="(item, index) in group.items" class="list-group-item" :key="index">
+              <img v-lazy="item.avatar" alt="" class="avatar">
+              <span class="name">{{item.name}}</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </scroll>
 </template>
 
 <script>
+import Scroll from '@/base/scroll/scroll'
 export default {
-  name: 'list-view'
+  name: 'list-view',
+  props: {
+    data: {
+      type: Array,
+      default: () => []
+    }
+  },
+  components: {
+    Scroll
+  }
 }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
 
-  .listview
+  .listView
     position: relative
     width: 100%
     height: 100%
