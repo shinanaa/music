@@ -11,3 +11,12 @@ export function hasClass(el, className) {
   // 检测className是否匹配reg正则
   return reg.test(el.className)
 }
+export function getData(el, name, val) {
+  const prefix = 'data-'
+  name = prefix + name
+  if (val) {
+    return el.setAttribute(name, val)
+  } else {
+    return el.getAttribute(name)
+  }
+}
