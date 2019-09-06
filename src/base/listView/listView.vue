@@ -83,6 +83,16 @@ export default {
       this.scrollY = pos.y
     },
     _scrollTo(index) {
+      console.log(index)
+      if (!index && index !== 0) {
+        return
+      }
+      if (index < 0) {
+        index = 0
+      } else if (index > this.listHeight.length - 2) {
+        index = this.listHeight.length - 2
+      }
+      this.scrollY = -this.listHeight[index]
       this.$refs.listView.scrollToElement(this.$refs.listGroup[index], 0) // 0代表没有滚动动画
     },
     _calculateHeight() {
@@ -105,15 +115,22 @@ export default {
     },
     scrollY(newY) {
       const listHeight = this.listHeight
-      for (let i = 0; i <= listHeight.length; i++) {
+      // 当列表滚动到顶部，newY > 0
+      if (newY > 0) {
+        this.currentIndex = 0
+        return
+      }
+      // 当列表在中间部分滚动
+      for (let i = 0; i <= listHeight.length - 1; i++) {
         let height1 = listHeight[i]
         let height2 = listHeight[i + 1]
-        if (!height2 || (-newY > height1 && -newY < height2)) {
+        if (!height2 || (-newY >= height1 && -newY < height2)) {
           this.currentIndex = i
           return
         }
       }
-      this.currentIndex = 0
+      // 当滚动到底部 且-newY大于最后一个元素的上限
+      this.currentIndex = listHeight.length - 2
     }
   }
 }
