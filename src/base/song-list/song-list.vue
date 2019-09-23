@@ -1,10 +1,10 @@
 <template>
     <div class="song-list">
       <ul>
-        <li v-for="(song, index) in songs" :key="index">
+        <li v-for="(song, index) in songs" :key="index" class="item">
           <div class="content">
             <h2 class="name">{{song.name}}</h2>
-            <p class="desc"></p>
+            <p class="desc">{{getDesc(song)}}</p>
           </div>
         </li>
       </ul>
@@ -21,7 +21,9 @@ export default {
     }
   },
   methods: {
-
+    getDesc(song) {
+      return `${song.singer} . ${song.album}`
+    }
   }
 }
 </script>
@@ -42,7 +44,7 @@ export default {
         width: 25px
         margin-right: 30px
         text-align: center
-        .icon
+        /*.icon
           display: inline-block
           width: 25px
           height: 24px
@@ -52,7 +54,7 @@ export default {
           &.icon1
             bg-image('second')
           &.icon2
-            bg-image('third')
+            bg-image('third')*/
         .text
           color: $color-theme
           font-size: $font-size-large
