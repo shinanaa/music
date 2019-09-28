@@ -11,22 +11,24 @@ export function getSingerList() {
     hostUin: 0,
     needNewCode: 0,
     platform: 'yqq.json',
-    g_tk: 5381
+    g_tk: 5381,
+    loginUin: 0
   })
   return Jsonp(url, data, options)
 }
-export function getSingerDetail(singerID) {
+export function getSingerDetail(singerId) {
   const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
+
   const data = Object.assign({}, commonParams, {
     hostUin: 0,
     needNewCode: 0,
-    platform: 'yqq.json',
+    platform: 'yqq',
     order: 'listen',
     begin: 0,
-    num: 100,
+    num: 80,
     songstatus: 1,
-    singermid: singerID,
-    g_tk: 5381
+    singermid: singerId
   })
+
   return Jsonp(url, data, options)
 }
