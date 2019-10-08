@@ -61,12 +61,15 @@
         </div>
       </div>
     </transition>
+    <audio ref="audio" :src="currentSong.url"></audio>
   </div>
 </template>
 
 <script>
 import {mapGetters, mapMutations} from 'vuex'
-// import animations from 'create-keyframe-animation'
+import animations from 'create-keyframe-animation'
+import {prefixStyle} from 'common/js/dom'
+const transform = prefixStyle('transform')
 
 export default {
   name: 'player',
@@ -84,13 +87,71 @@ export default {
     open() {
       this.setFullScreen(true)
     },
-    enter(el, done) {},
-    afterEnter() {},
-    leave(el, done) {},
-    afterLeave() {},
+    enter(el, done) {
+      const {x, y, scale} = this._getPosAndScale()
+      let animation = {
+        0: {
+          transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+        },
+        60: {
+          transform: `translate3d(0, 0, 0) scale(1.1)`
+        },
+        100: {
+          transform: `translate3d(0, 0, 0) scale(1)`
+        }
+      }
+      // 注册animations
+      animations.registerAnimation({
+        name: 'move',
+        animation,
+        presets: {
+          duration: 400,
+          easing: 'Linear'
+        }
+      })
+      // 运行animations
+      animations.runAnimation(this.$refs.cdWrapper, 'move', done)
+    },
+    afterEnter() {
+      // 清空animation
+      animations.unregisterAnimation('move')
+      this.$refs.cdWrapper.style.animation = ''
+    },
+    leave(el, done) {
+      this.$refs.cdWrapper.style.transition = 'all 0.4s'
+      const {x, y, scale} = this._getPosAndScale()
+      this.$refs.cdWrapper.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+      this.$refs.cdWrapper.addEventListener('transitionend', done)
+    },
+    afterLeave() {
+      this.$refs.cdWrapper.style.transition = ''
+      this.$refs.cdWrapper.style[transform] = ''
+    },
+    _getPosAndScale() {
+      const targetWidth = 40 // mini的宽
+      const paddingLeft = 40 // mini距屏幕左的距离
+      const paddingBottom = 30 // mini距屏幕下的距离
+      const paddingTop = 80 // normal距屏幕上的距离
+      const width = window.innerWidth * 0.8 // normal的宽
+      const scale = targetWidth / width // normal比mini大的倍数
+      const x = -(window.innerWidth / 2 - paddingLeft) // normal到mini的x轴需变化的距离(即相对于normal来说mini的x坐标)
+      const y = window.innerHeight - paddingTop - width / 2 - paddingBottom // normal到mini的y轴需变化的距离(即相对于normal来说mini的y坐标)
+      return {
+        x,
+        y,
+        scale
+      }
+    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN'
     })
+  },
+  watch: {
+    currentSong() {
+      this.$nextTick(() => {
+        this.$refs.audio.play()
+      })
+    }
   }
 }
 </script>
