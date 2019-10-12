@@ -6,7 +6,7 @@
 
 <script type="text/ecmascript-6">
 import { mapGetters } from 'vuex'
-import {getSingerDetail} from '@/api/singer'
+import {getSingerDetail, getPlaySongVkey} from '@/api/singer'
 import {ERR_OK} from '@/api/config'
 import {createSong} from 'common/js/song'
 import MusicList from '@/components/music-list/music-list'
@@ -45,12 +45,28 @@ export default {
         }
       })
     },
+    // _normalizeSongs(list) {
+    //   let ret = []
+    //   list.forEach((item) => {
+    //     let {musicData} = item
+    //     if (musicData.songid && musicData.albummid) {
+    //       ret.push(createSong(musicData))
+    //     }
+    //   })
+    //   return ret
+    // }
     _normalizeSongs(list) {
       let ret = []
       list.forEach((item) => {
         let {musicData} = item
         if (musicData.songid && musicData.albummid) {
-          ret.push(createSong(musicData))
+          getPlaySongVkey(musicData.songmid).then((res) => {
+            console.log('vkey')
+            console.log(res)
+            const svkey = res.data.items
+            const songVkey = svkey[0].vkey
+            ret.push(createSong(musicData, songVkey))
+          })
         }
       })
       return ret
