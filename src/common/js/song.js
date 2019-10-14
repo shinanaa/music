@@ -19,7 +19,8 @@ export function createSong(musicData, songVkey) {
     album: musicData.albumname,
     duration: musicData.interval,
     image: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://ws.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=1329984726&vkey=${songVkey}&uin=0&fromtag=66`
+    // url: `http://ws.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=1329984726&vkey=${songVkey}&uin=0&fromtag=66`
+    url: `http://ws.stream.qqmusic.qq.com/${songVkey}`
   })
 }
 function filterSinger(singer) {
