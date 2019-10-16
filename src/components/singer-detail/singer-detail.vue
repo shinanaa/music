@@ -45,21 +45,11 @@ export default {
         }
       })
     },
-    // _normalizeSongs(list) {
-    //   let ret = []
-    //   list.forEach((item) => {
-    //     let {musicData} = item
-    //     if (musicData.songid && musicData.albummid) {
-    //       ret.push(createSong(musicData))
-    //     }
-    //   })
-    //   return ret
-    // }
     _normalizeSongs(list) {
       let ret = []
       list.forEach((item) => {
         let {musicData} = item
-        if (musicData.songid && musicData.albummid) {
+        if (musicData.songmid && musicData.albummid) {
           getPlaySongVkey(musicData.songmid).then((res) => {
             if (res) {
               ret.push(createSong(musicData, res))
