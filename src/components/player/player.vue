@@ -183,6 +183,7 @@ export default {
     },
     loop() {
       this.$refs.audio.currentTime = 0
+      this.$refs.audio.play()
     },
     next() {
       if (!this.songReady) {
@@ -278,7 +279,7 @@ export default {
       setFullScreen: 'SET_FULL_SCREEN',
       setPlayingState: 'SET_PLAYING_STATE',
       setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MPDE',
+      setPlayMode: 'SET_PLAY_MODE',
       setPlayList: 'SET_PLAYLIST'
     })
   },
