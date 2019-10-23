@@ -84,6 +84,7 @@ import ProgressBar from '@/base/progress-bar/progress-bar'
 import ProgressCircle from '@/base/progress-circle/progress-circle'
 import {playMode} from 'common/js/config'
 import {shuffle} from 'common/js/util'
+import Lyric from 'lyric-parser'
 const transform = prefixStyle('transform')
 
 export default {
@@ -92,7 +93,8 @@ export default {
     return {
       songReady: false,
       currentTime: 0,
-      radius: 32
+      radius: 32,
+      currentLyric: null
     }
   },
   computed: {
@@ -252,6 +254,12 @@ export default {
       })
       this.setCurrentIndex(index)
     },
+    getLyric() {
+      this.currentSong.getLyric().then((lyric) => {
+        console.log(lyric)
+        this.currentLyric = new Lyric(lyric)
+      })
+    },
     _pad(num, n = 2) {
       let len = num.toString().length
       while (len < n) {
@@ -290,6 +298,7 @@ export default {
       }
       this.$nextTick(() => { // 在dom加载之后执行
         this.$refs.audio.play()
+        this.currentSong.getLyric()
       })
     },
     playing(newPlaying) {
