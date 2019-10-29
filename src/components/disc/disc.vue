@@ -1,6 +1,6 @@
 <template>
     <transition name="slide">
-      <music-list :title="title" :bg-image="bgImage"></music-list>
+      <music-list :title="title" :bg-image="bgImage" :songs="songs"></music-list>
     </transition>
 </template>
 
@@ -9,6 +9,8 @@ import MusicList from '@/components/music-list/music-list'
 import {mapGetters} from 'vuex'
 import {getSongList} from '@/api/recommend'
 import {ERR_OK} from '@/api/config'
+import {createDisc} from 'common/js/song'
+import {getPlaySongVkey} from '@/api/singer'
 
 export default {
   name: 'disc',
@@ -23,16 +25,40 @@ export default {
       'disc'
     ])
   },
+  data() {
+    return {
+      songs: []
+    }
+  },
   created() {
     this._getSongList()
   },
   methods: {
     _getSongList() {
+      if (!this.disc.dissid) {
+        this.$router.push('/recommend')
+        return
+      }
       getSongList(this.disc.dissid).then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res.cdlist[0].songlist)
+          this.songs = this._normalizeSongs(res.cdlist[0].songlist)
         }
       })
+    },
+    _normalizeSongs(list) {
+      let ret = []
+      list.forEach((musicData) => {
+        if (musicData.id && musicData.album.id) {
+          getPlaySongVkey(musicData.mid).then((res) => {
+            if (res) {
+              ret.push(createDisc(musicData, res))
+            } else {
+              // ret.push(createDisc(musicData, 'noPlay')) // 获取不到播放地址
+            }
+          })
+        }
+      })
+      return ret
     }
   },
   components: {MusicList}

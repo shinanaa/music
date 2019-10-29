@@ -89,6 +89,15 @@ export default {
         list: this.songs,
         index: index
       })
+      // 若将获取不到播放地址的歌曲信息显示，再次过滤点击歌曲是否播放
+      // if (item.url.indexOf('noPlay') === -1) {
+      //   this.selectPlay({
+      //     list: this.songs.filter(song => song.url.indexOf('noPlay') === -1),
+      //     index: index
+      //   })
+      // } else {
+      //   console.log('歌曲不能播放')
+      // }
     },
     random() {
       this.randomPlay({

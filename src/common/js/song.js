@@ -42,6 +42,18 @@ export function createSong(musicData, songVkey) {
     url: `http://ws.stream.qqmusic.qq.com/${songVkey}`
   })
 }
+export function createDisc(musicData, songVkey) {
+  return new Song({
+    id: musicData.id,
+    mid: musicData.mid,
+    singer: filterSinger(musicData.singer),
+    name: musicData.name,
+    album: musicData.album.subtitle,
+    duration: musicData.interval,
+    image: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.album.mid}.jpg?max_age=2592000`,
+    url: `http://ws.stream.qqmusic.qq.com/${songVkey}`
+  })
+}
 function filterSinger(singer) {
   let ret = []
   if (!singer) {
