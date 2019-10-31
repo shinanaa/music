@@ -1,6 +1,6 @@
 <template>
     <transition name="slide">
-      <music-list :title="title" :bg-image="bgImage" :songs="songs"></music-list>
+      <music-list :rank="rank" :title="title" :bg-image="bgImage" :songs="songs"></music-list>
     </transition>
 </template>
 
@@ -32,11 +32,16 @@ export default {
   },
   data() {
     return {
-      songs: []
+      songs: [],
+      rank: true
     }
   },
   methods: {
     _getTopList() {
+      if (!this.topList.id) {
+        this.$router.push('/rank')
+        return
+      }
       getMusicList(this.topList.id).then((res) => {
         if (res.code === ERR_OK) {
           this.songs = this.normalizeSongs(res.songlist)
@@ -45,12 +50,22 @@ export default {
     },
     normalizeSongs(list) {
       let ret = []
+      // let songmidArr = []
+      // let typeArr = []
       list.forEach((item) => {
         const musicData = item.data
         if (musicData.songid && musicData.albumid) {
+          // songmidArr.push(musicData.songmid)
+          // typeArr.push(0)
           ret.push(createSong(musicData))
         }
       })
+      // console.log(songmidArr)
+      // console.log(typeArr)
+      // getPlaySongPurl(songmidArr, typeArr).then((res) => {
+      //   console.log(123)
+      //   console.log(res)
+      // })
       return ret
     }
   },

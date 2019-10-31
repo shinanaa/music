@@ -27,3 +27,21 @@ export function getMusicList(topid) {
   })
   return Jsonp(url, data, options)
 }
+
+export function getPlaySongPurl(songmidArr, typeArr) {
+  const url = '/getPlaySongPurl'
+  const data = Object.assign({}, commonParams, {
+    notice: 0,
+    platform: 'h5',
+    needNewCode: 1,
+    uin: 0,
+    format: 'json',
+    data: {'req_0': {'module': 'vkey.GetVkeyServer', 'method': 'CgiGetVkey', 'param': {'guid': '3166224376', 'songmid': songmidArr, 'songtype': typeArr, 'uin': '0', 'loginflag': 0, 'platform': '23'}}, 'comm': {'uin': 0, 'format': 'json', 'ct': 24, 'cv': 0}}
+  })
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    console.log(123)
+    return Promise.resolve(res.data.req_0.data)
+  })
+}

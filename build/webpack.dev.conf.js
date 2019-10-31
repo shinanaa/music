@@ -124,6 +124,20 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           console.log(e)
         })
       })
+      // app.get('/getPlaySongPurl', function (req, res) {
+      //   var url = 'http://ustbhuangyi.com/music/api/getPurlUrl'
+      //   axios.get(url, {
+      //     headers: {
+      //       referer: 'http://ustbhuangyi.com/music/',
+      //       host: 'ustbhuangyi.com'
+      //     },
+      //     params: req.query
+      //   }).then((response) => {
+      //     res.json(response.data)
+      //   }).catch((e) => {
+      //     console.log(e)
+      //   })
+      // })
     }
   },
   plugins: [
