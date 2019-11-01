@@ -7,7 +7,7 @@
 <script>
 import MusicList from '@/components/music-list/music-list'
 import {mapGetters} from 'vuex'
-import {getMusicList} from '@/api/rank'
+import {getMusicList, getPlaySongPurl} from '@/api/rank'
 import {ERR_OK} from '@/api/config'
 import {createSong} from 'common/js/song'
 
@@ -50,22 +50,20 @@ export default {
     },
     normalizeSongs(list) {
       let ret = []
-      // let songmidArr = []
-      // let typeArr = []
+      let songmidArr = []
+      let typeArr = []
       list.forEach((item) => {
         const musicData = item.data
         if (musicData.songid && musicData.albumid) {
-          // songmidArr.push(musicData.songmid)
-          // typeArr.push(0)
+          songmidArr.push(musicData.songmid)
+          typeArr.push(0)
           ret.push(createSong(musicData))
         }
       })
-      // console.log(songmidArr)
-      // console.log(typeArr)
-      // getPlaySongPurl(songmidArr, typeArr).then((res) => {
-      //   console.log(123)
-      //   console.log(res)
-      // })
+      getPlaySongPurl(songmidArr, typeArr).then((res) => {
+        console.log(123)
+        console.log(res)
+      })
       return ret
     }
   },

@@ -66,7 +66,7 @@ export function createRank() {
   //   url: `http://aqqmusic.tc.qq.com/amobile.music.tc.qq.com/${songVkey}`
   // })
 }
-function filterSinger(singer) {
+export function filterSinger(singer) {
   let ret = []
   if (!singer) {
     return ''

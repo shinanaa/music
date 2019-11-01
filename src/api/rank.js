@@ -29,17 +29,20 @@ export function getMusicList(topid) {
 }
 
 export function getPlaySongPurl(songmidArr, typeArr) {
-  const url = '/getPlaySongPurl'
+  const url = '/getPlaySongPurl '
   const data = Object.assign({}, commonParams, {
     notice: 0,
     platform: 'h5',
     needNewCode: 1,
     uin: 0,
-    format: 'json',
-    data: {'req_0': {'module': 'vkey.GetVkeyServer', 'method': 'CgiGetVkey', 'param': {'guid': '3166224376', 'songmid': songmidArr, 'songtype': typeArr, 'uin': '0', 'loginflag': 0, 'platform': '23'}}, 'comm': {'uin': 0, 'format': 'json', 'ct': 24, 'cv': 0}}
+    format: 'json'
   })
-  return axios.get(url, {
-    params: data
+  const req = {
+    'method': 'CgiGetVkey', 'module': 'vkey.GetVkeyServer', 'param': {'guid': +new Date(), 'songmid': songmidArr, 'songtype': typeArr, 'uin': '0', 'loginflag': 0, 'platform': '23'}
+  }
+  return axios.post(url, {
+    comm: data,
+    req_0: req
   }).then((res) => {
     console.log(123)
     return Promise.resolve(res.data.req_0.data)

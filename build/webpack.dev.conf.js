@@ -124,20 +124,34 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           console.log(e)
         })
       })
-      // app.get('/getPlaySongPurl', function (req, res) {
-      //   var url = 'http://ustbhuangyi.com/music/api/getPurlUrl'
-      //   axios.get(url, {
-      //     headers: {
-      //       referer: 'http://ustbhuangyi.com/music/',
-      //       host: 'ustbhuangyi.com'
-      //     },
-      //     params: req.query
-      //   }).then((response) => {
-      //     res.json(response.data)
-      //   }).catch((e) => {
-      //     console.log(e)
-      //   })
-      // })
+      app.get('/getPlaySongPurl', function (req, res) {
+        var url = 'http://ustbhuangyi.com/music/api/getPurlUrl'
+        axios.post(url, {
+          headers: {
+            referer: 'http://ustbhuangyi.com/music/',
+            host: 'ustbhuangyi.com'
+          },
+          payload: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
+      app.get('/getHotKey', function (req, res) {
+        var url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.post(url, {
+          headers: {
+            referer: 'https://y.qq.com/m/index.html',
+            host: 'y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
     }
   },
   plugins: [
