@@ -2,7 +2,9 @@
     <scroll class="suggest"
             :data="result"
             :pullUp="pullUp"
+            :beforeScroll="beforeScroll"
             @scrollToEnd="searchMore"
+            @beforeScroll="listScroll"
             ref="suggest"
     >
       <div class="suggest-list">
@@ -16,6 +18,9 @@
         </div>
         <loading v-show="hasMore" title=""></loading>
       </div>
+      <div v-show="!result.length && !hasMore" class="no-result-wrapper">
+        <no-result title="抱歉，暂无搜索结果"></no-result>
+      </div>
     </scroll>
 </template>
 
@@ -26,7 +31,8 @@ import {createSong} from 'common/js/song'
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
 import Singer from '@/common/js/singer'
-import {mapMutations} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
+import noResult from '@/base/no-result/no-result'
 
 const TYPE_SINGER = 'singer'
 const perpage = 20
@@ -48,7 +54,8 @@ export default {
       page: 1,
       result: [],
       pullUp: true,
-      hasMore: true
+      hasMore: true,
+      beforeScroll: true
     }
   },
   created() {},
@@ -90,6 +97,9 @@ export default {
         return `${item.name} - ${item.singer}`
       }
     },
+    listScroll() {
+      this.$emit('listScroll')
+    },
     _checkMore(data) {
       const song = data.song
       if (!song.list.length || (song.curnum + song.curpage * perpage) > song.totalnum) {
@@ -106,7 +116,10 @@ export default {
           path: `/search/${singer.id}`
         })
         this.setSinger(singer)
+      } else {
+        this.insertSong(item)
       }
+      this.$emit('select')
     },
     _genResult(data) {
       let ret = []
@@ -129,14 +142,17 @@ export default {
     },
     ...mapMutations({
       setSinger: 'SET_SINGER'
-    })
+    }),
+    ...mapActions([
+      'insertSong'
+    ])
   },
   watch: {
     query(newQuery) {
       this.search(newQuery)
     }
   },
-  components: {Scroll, Loading}
+  components: {Scroll, Loading, noResult}
 }
 </script>
 
