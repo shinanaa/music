@@ -90,7 +90,7 @@
       </div>
     </transition>
     <play-list ref="playList"></play-list>
-    <audio ref="audio" @timeupdate="updateTime" :src="currentSong.url" @canplay="ready" @error="error" @ended="end"></audio>
+    <audio ref="audio" @timeupdate="updateTime" :src="currentSong.url" @play="ready" @error="error" @ended="end"></audio>
   </div>
 </template>
 
@@ -225,6 +225,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === this.playList.length) {
@@ -243,6 +244,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex - 1
         if (index === -1) {
@@ -283,6 +285,9 @@ export default {
     },
     getLyric() {
       this.currentSong.getLyric().then((lyric) => {
+        if (this.currentSong.lyric !== lyric) {
+          return
+        }
         this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
@@ -399,7 +404,8 @@ export default {
         this.currentLyric.stop()
       }
       // 使用定时器，防止在微信浏览器中歌曲播放完仍不停止
-      setTimeout(() => {
+      clearTimeout(this.Timer)
+      this.Timer = setTimeout(() => {
         this.$refs.audio.play()
         this.getLyric()
       }, 1000)
