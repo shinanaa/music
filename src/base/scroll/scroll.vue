@@ -72,7 +72,7 @@ export default {
         })
       }
     },
-    // better-scroll方法代理
+    // better-scroll方法代理,将better-scroll的一些方法转化为scroll组件的方法
     enable() {
       this.scroll && this.scroll.enable()
     },

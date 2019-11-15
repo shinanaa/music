@@ -90,6 +90,7 @@ export default {
     },
     // 当图片加载时，再调用scroll组件的refresh方法，避免其因初始化高度不足
     loadImage() {
+      // checkLoad 标志位 确保该方法只调用一次
       if (!this.checkLoad) {
         this.$refs.scroll.refresh()
         this.checkLoad = true
