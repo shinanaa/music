@@ -94,10 +94,9 @@ export default {
       this.dots = new Array(this.children.length)
     },
     _play() {
-      let pageIndex = this.currentPageIndex + 1
+      // let pageIndex = this.currentPageIndex + 1
       this.timer = setTimeout(() => {
         this.slider.next()
-        console.log(pageIndex)
         // this.slider.goToPage(pageIndex, 0, 400)
       }, this.interval)
     }

@@ -40,7 +40,7 @@
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
 import {getData} from 'common/js/dom'
-const ANCHOR_HEIGHT = 18
+const ANCHOR_HEIGHT = 18 // 每个元素的高度，用以判定在滑动过程中活动了几个元素
 const TITLE_HEIGHT = 30
 export default {
   name: 'list-view',
@@ -60,13 +60,14 @@ export default {
   computed: {
     shortcutList() {
       return this.data.map((group) => {
-        return group.title.substr(0, 1)
+        return group.title.substr(0, 1) // 热门取‘热’，其他字母正常显示
       })
     },
     fixedTitle() {
       if (this.scrollY > 0) {
         return ''
       }
+      console.log(this.currentIndex)
       return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
     }
   },
@@ -77,7 +78,7 @@ export default {
   created() {
     this.touch = {}
     this.ListenScroll = true
-    this.probeType = 3
+    this.probeType = 3 // 不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件
     this.listHeight = []
   },
   methods: {
@@ -105,7 +106,7 @@ export default {
       this.scrollY = pos.y
     },
     _scrollTo(index) {
-      console.log(index)
+      // 以下边界情况不设置也生效
       if (!index && index !== 0) {
         return
       }
@@ -114,11 +115,11 @@ export default {
       } else if (index > this.listHeight.length - 2) {
         index = this.listHeight.length - 2
       }
-      this.scrollY = -this.listHeight[index]
+      this.scrollY = -this.listHeight[index] // 点击右侧列表实现选中状态的同步
       this.$refs.listView.scrollToElement(this.$refs.listGroup[index], 0) // 0代表没有滚动动画
     },
     _calculateHeight() {
-      this.listHeight = []
+      this.listHeight = [] // 每一个分组距离顶部的距离
       const list = this.$refs.listGroup
       let height = 0
       this.listHeight.push(height)
@@ -133,7 +134,7 @@ export default {
     data() {
       setTimeout(() => {
         this._calculateHeight()
-      })
+      }, 20)
     },
     scrollY(newY) {
       const listHeight = this.listHeight
@@ -143,12 +144,12 @@ export default {
         return
       }
       // 当列表在中间部分滚动
-      for (let i = 0; i <= listHeight.length - 1; i++) {
-        let height1 = listHeight[i]
-        let height2 = listHeight[i + 1]
-        if (!height2 || (-newY >= height1 && -newY < height2)) {
-          this.currentIndex = i
-          this.diff = height2 + newY
+      for (let i = 0; i < listHeight.length - 1; i++) {
+        let height1 = listHeight[i] // 当前分组的顶部距列表顶部的距离
+        let height2 = listHeight[i + 1] // 当前分组底部距列表顶部的距离
+        if (!height2 || (-newY >= height1 && -newY < height2)) { // 滚动最后一个列表 或 滚动到在列表之间时（向上滚动时newY是负值）
+          this.currentIndex = i // 确定当前区间
+          this.diff = height2 + newY // 当前区域的底端 - 当前滚动的距离（当前区域的底端距页面滚动区域顶部的距离）
           return
         }
       }
@@ -156,9 +157,10 @@ export default {
       this.currentIndex = listHeight.length - 2
     },
     diff(newVal) {
+      // 当前区域未滚动出滚动区域并且距滚动区域的顶端<30px时，fixedTop为当前top滚入fixed的值
       let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
       if (this.fixedTop === fixedTop) {
-        return
+        return // 不需要修改dom
       }
       this.fixedTop = fixedTop
       this.$refs.fixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`
