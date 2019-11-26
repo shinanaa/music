@@ -29,6 +29,7 @@ export default class Song {
     })
   }
 }
+// Song 的工厂方法（不直接调用new 通过一个方法，返回一个实例）
 export function createSong(musicData, songVkey) {
   return new Song({
     id: musicData.songid,

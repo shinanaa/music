@@ -8,6 +8,7 @@ import createLogger from 'vuex/dist/logger'
 
 Vue.use(Vuex)
 
+// env.NODE_ENV开发模式下为dev， 生产模式下为production
 const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
